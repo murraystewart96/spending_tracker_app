@@ -1,14 +1,17 @@
 require_relative('../db/sql_runner')
+require_relative('merchant')
+require_relative('tag')
 
 class Transaction
 
-  attr_reader :id
+  attr_reader :id, :merchant_id, :tag_id
+  attr_accessor :description, :amount, :date
 
   def initialize(info)
     @id = info['id'].to_i() if info['id']
     @description = info['description']
     @amount = info['amount'].to_i()
-    @date = info['date']
+    @date = info['date_of_transaction']
     @merchant_id = info['merchant_id']
     @tag_id = info['tag_id']
   end
@@ -31,6 +34,14 @@ class Transaction
     sql_query = "SELECT * FROM transactions"
     transactions_info = SqlRunner.run(sql_query)
     return transactions_info.map{|trans_info| Transaction.new(trans_info)}
+  end
+
+  def merchant()
+    return Merchant.find_by_id(@merchant_id)
+  end
+
+  def tag()
+    return Tag.find_by_id(@tag_id)
   end
 
 end

@@ -20,7 +20,7 @@ tesco.save()
 
 
 tag_info_1 = {
-  'category' => 'groceries'
+  'name' => 'groceries'
 }
 
 groceries = Tag.new(tag_info_1)
@@ -30,7 +30,7 @@ groceries.save()
 transaction_info_1 = {
   'description' => 'weekly shop',
   'amount' => 100,
-  'date' => '28/11/19',
+  'date_of_transaction' => '28/11/19',
   'merchant_id' => tesco.id,
   'tag_id' => groceries.id
 }

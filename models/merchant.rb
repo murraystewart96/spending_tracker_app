@@ -36,8 +36,8 @@ class Merchant
     WHERE id = $1"
     values = [id]
 
-    merchant_info = SqlRunner.run(sql_query, values)
-
+    merchant_info = SqlRunner.run(sql_query, values)[0]
+    return Merchant.new(merchant_info)
   end
 
 end

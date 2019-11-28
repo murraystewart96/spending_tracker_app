@@ -1,1 +1,9 @@
 <h1>*** ALL TRANSACTIONS ***</h1>
+
+<% for transaction in @transactions %>
+  <p>Merchant: <%= transaction.merchant().name %></p>
+  <p>Tag: <%= transaction.tag().name%></p>
+  <p>Description: <%= transaction.description %></p>
+  <p>Amount: <%= transaction.amount %></p>
+  <p>Date: <%= transaction.date %></p>
+<% end %>
