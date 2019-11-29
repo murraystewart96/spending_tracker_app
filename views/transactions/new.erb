@@ -1,0 +1,27 @@
+<h1>*** Create Transaction ***</h1>
+
+<div class="container">
+  <form action="/transactions" method="POST">
+
+    <label for="merchant-select">Merchant:</label>
+    <select name="merchant_id" id="merchant-select">
+      <% for merchant in @merchants %>
+      <option value="<% merchant.id %>"><%= merchant.name %></option>
+      <% end %>
+    </select>
+
+    <label for="tag-select">Tag:</label>
+    <select name="tag_id" id="tag-select">
+      <% for tag in @tags %>
+      <option value="<% tag.id %>"><%= tag.name %></option>
+      <% end %>
+    </select>
+
+    <label for="description">Description:</label>
+    <input type="text" id="decription" name="description">
+
+    <label for="amount">Amount: <input type="number" id="amount" name="amount"></label>
+
+  </form>
+
+</div>

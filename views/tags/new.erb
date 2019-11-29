@@ -1,0 +1,15 @@
+<h1>*** CREATE TAG ***</h1>
+
+
+<ul class="tags">
+<% for tag in @tags %>
+  <li><%= tag.name %></li>
+<% end %>
+</ul>
+
+<form action="/tags" method="POST">
+  <label for="tag-name">Tag Name: </label>
+  <input type="text" id="tag-name" name="name">
+
+  <input type="submit" value="Create Tag">
+</form>

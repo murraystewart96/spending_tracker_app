@@ -1,0 +1,16 @@
+<h1>*** CREATE MERCHANT ***</h1>
+
+
+
+<ul class="merchants">
+<% for merchant in @merchants %>
+  <li><%= merchant.name %></li>
+<% end %>
+</ul>
+
+<form action="/merchants" method="POST">
+  <label for="merchant-name">Merchant Name: </label>
+  <input type="text" id="merchant-name" name="name">
+
+  <input type="submit" value="Create Merchant">
+</form>
