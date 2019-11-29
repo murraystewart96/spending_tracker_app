@@ -59,17 +59,41 @@ class Transaction
     return timestamp.split(' ')[0]
   end
 
+
+  def self.find_transactions_for_month(month_num)
+    transactions = Transaction.all()
+    trans_in_month = []
+    for transaction in transactions
+      month = transaction.date().split('-')[1].to_i()
+      p month
+      if (month == month_num)
+        trans_in_month.push(transaction)
+      end
+    end
+    return trans_in_month
+  end
+
+
   def time()
     timestamp = timestamp()
     return timestamp.split(' ')[1]
   end
 
 
-  def self.all_ordered_by_timestamp()
-    sql_query = "SELECT *
-    FROM transactions
-    ORDER BY transaction_timestamp
-    DESC;"
+  def self.all_ordered_by_timestamp(order_by = "newest")
+
+    if (order_by == "newest")
+      sql_query = "SELECT *
+      FROM transactions
+      ORDER BY transaction_timestamp
+      DESC"
+    elsif (order_by == "oldest")
+      sql_query = "SELECT *
+      FROM transactions
+      ORDER BY transaction_timestamp
+      ASC"
+    end
+
     transactions_info = SqlRunner.run(sql_query)
     return transactions_info.map{|trans_info| Transaction.new(trans_info)}
   end
