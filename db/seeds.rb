@@ -30,12 +30,13 @@ groceries.save()
 transaction_info_1 = {
   'description' => 'weekly shop',
   'amount' => 100,
-  'date_of_transaction' => '28/11/19',
   'merchant_id' => tesco.id,
   'tag_id' => groceries.id
 }
 
 transaction1 = Transaction.new(transaction_info_1)
+transaction1.save()
+transaction1.save()
 transaction1.save()
 
 binding.pry

@@ -1,9 +1,19 @@
 <h1>*** ALL TRANSACTIONS ***</h1>
 
+<h2>Total Amount Spent: £<%= @total_amount %></h2>
+
+
+<form action="/transactions/ordered" method="POST">
+  <input type="radio" name="order_by" value="newest">
+  <input type="radio" name="order_by" value="oldest">
+</form>
+
+
+
 <% for transaction in @transactions %>
   <p>Merchant: <%= transaction.merchant().name %></p>
   <p>Tag: <%= transaction.tag().name%></p>
   <p>Description: <%= transaction.description %></p>
   <p>Amount: <%= transaction.amount %></p>
-  <p>Date: <%= transaction.date %></p>
+  <p>Timestamp: <%= transaction.timestamp() %></p>
 <% end %>

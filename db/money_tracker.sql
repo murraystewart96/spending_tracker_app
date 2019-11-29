@@ -17,7 +17,7 @@ CREATE TABLE transactions(
   id SERIAL8 PRIMARY KEY,
   description VARCHAR,
   amount INT,
-  date_of_transaction VARCHAR,
+  transaction_timestamp TIMESTAMP,
   merchant_id INT REFERENCES merchants(id),
   tag_id INT REFERENCES tags(id)
 );
