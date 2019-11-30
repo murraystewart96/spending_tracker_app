@@ -4,20 +4,28 @@
 
 
 <div class="container">
-  <form action="/transactions/filter" method="POST">
+  <form action="/transactions/filtered" method="POST">
     <label for="month-select">Month:</label>
     <select name="month_num" id="months">
-      <option value="" selected disabled hidden>Select</option>
+      <option selected value="0" >All</option>
       <% for month in @months%>
-        <option value=<%= (@months.index(month)+1) %>><%= month %></option>
-      <% end %>
+        <% if (@month_num == @months.index(month)+1) %>
+          <option selected value=<%= @month_num %>><%= month %></option>
+        <% else %>
+          <option value=<%= (@months.index(month)+1) %>><%= month %></option>
+        <% end %>
+      <% end  %>
     </select>
 
     <label for="tag-select">Tag:</label>
     <select name= "tag_id" id="tags">
-      <option value="" selected disabled hidden>Select</option>
+      <option selected value="0">All</option>
       <% for tag in @tags%>
-        <option value="<%= tag.id %>"><%= tag.name %></option>
+        <% if (@tag_id == tag.id) %>
+          <option selected value=<%= @tag_id %>><%= tag.name %></option>
+        <% else%>
+          <option value="<%= tag.id %>"><%= tag.name %></option>
+        <% end %>
       <% end %>
     </select>
 
@@ -33,6 +41,16 @@
     <label for="oldest">Old</label>
     <input type="radio" name="sort_by" value="oldest">
     <input type="submit" value="sort_by">
+  </form>
+</div>
+
+<div class="container">
+  <form action="/transactions/filtered/sorted" method="POST">
+    <label for="newest">New</label>
+    <input type="radio" name="sort_by" value="newest" checked>
+    <label for="oldest">Old</label>
+    <input type="radio" name="sort_by" value="oldest">
+    <input type="submit" value="sort by & filtered">
   </form>
 </div>
 

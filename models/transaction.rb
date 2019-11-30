@@ -60,17 +60,41 @@ class Transaction
   end
 
 
-  def self.find_transactions_for_month(month_num)
-    transactions = Transaction.all()
+  def self.transactions_by_month(transactions, month_num)
     trans_in_month = []
     for transaction in transactions
       month = transaction.date().split('-')[1].to_i()
-      p month
       if (month == month_num)
         trans_in_month.push(transaction)
       end
     end
     return trans_in_month
+  end
+
+
+  def self.transactions_by_tag(transactions, tag_id)
+    tag_transactions = []
+
+    for transaction in transactions
+      if (transaction.tag_id == tag_id)
+        tag_transactions.push(transaction)
+      end
+    end
+    return tag_transactions
+  end
+
+
+  def self.transactions_filtered(month_num, tag_id)
+    transactions = Transaction.all_ordered_by_timestamp()
+
+    if(month_num != 0)
+      transactions = Transaction.transactions_by_month(transactions, month_num)
+    end
+
+    if(tag_id != 0)
+      transactions =  Transaction.transactions_by_tag(transactions, tag_id)
+    end
+    return transactions
   end
 
 

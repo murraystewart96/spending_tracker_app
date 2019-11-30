@@ -32,19 +32,22 @@ post('/transactions') do
   redirect('/transactions')
 end
 
-post('/transactions/filter') do
+post('/transactions/filtered') do
+  @month_num = params['month_num'].to_i()
+  @tag_id = params['tag_id'].to_i()
+  @transactions = Transaction.transactions_filtered(@month_num, @tag_id)
+  @total_amount = Transaction.total_amount()
+  @tags = Tag.all()
+  @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+              "Aug", "Sep", "Oct", "Nov", "Dec"]
+  erb(:"transactions/index")
+end
 
-  @transactions = []
-  month_num = params['month_num'].to_i()
-  tag_id = params['tag_id'].to_i()
-  if(month_num)
-    @transactions = Transaction.find_transactions_for_month(month_num)
-  end
 
-  if(tag_id)
-    @transactions = 
-  end
-
+post('/transactions/sorted') do
+  sort_by = params['sort_by']
+  @transactions = Transaction.all_ordered_by_timestamp(sort_by)
+  @total_amount = Transaction.total_amount()
   @tags = Tag.all()
   @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
               "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -52,13 +55,22 @@ post('/transactions/filter') do
   erb(:"transactions/index")
 end
 
-
-post('/transactions/sorted') do
+post('/transactions/filtered/sorted/:month_num/:tag_id') do
   sort_by = params['sort_by']
-
   @transactions = Transaction.all_ordered_by_timestamp(sort_by)
-
   @total_amount = Transaction.total_amount()
+  @tags = Tag.all()
+  @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+              "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  @month_num = params['month_num'].to_i()
+  @tag_id = params['tag_id'].to_i()
+  @transactions = Transaction.transactions_filtered(@month_num, @tag_id)
+  @total_amount = Transaction.total_amount()
+  @tags = Tag.all()
+  @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+              "Aug", "Sep", "Oct", "Nov", "Dec"]
+  erb(:"transactions/index")
 
   erb(:"transactions/index")
 end
