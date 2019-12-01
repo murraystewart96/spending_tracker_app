@@ -14,5 +14,5 @@ end
 post('/merchants') do
   merchant = Merchant.new(params)
   merchant.save()
-  redirect(:'merchants/new')
+  redirect(:'transactions/new')
 end

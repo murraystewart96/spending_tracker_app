@@ -1,6 +1,22 @@
-<h1>*** ALL TRANSACTIONS ***</h1>
 
-<h2>Total Amount Spent: £<%= @total_amount %></h2>
+<div class="topcorner">
+  <p>£100</p>
+</div>
+
+
+<h1>*** SPENDING ***</h1>
+
+<h2>Current Balance: £<%= @user.balance %></h2>
+
+<% if (@filtered_by_month_and_tag)%>
+  <h2>Spending for <%= @month %> (<%=@tag.name %>): £<%= @transactions_amount %></h2>
+<% elsif (@filtered_month_only)%>
+  <h2>Spending for <%= @month %>: £<%= @transactions_amount %></h2>
+<% elsif @filtered_tag_only%>
+  <h2>Total Spending (<%=@tag.name %>): £<%= @transactions_amount %></h2>
+<% else %>
+  <h2>All Time Spending: £<%= @transactions_amount %></h2>
+<% end %>
 
 
 <div class="container">
@@ -34,23 +50,18 @@
   </form>
 </div>
 
-<div class="container">
-  <form action="/transactions/sorted" method="POST">
-    <label for="newest">New</label>
-    <input type="radio" name="sort_by" value="newest" checked>
-    <label for="oldest">Old</label>
-    <input type="radio" name="sort_by" value="oldest">
-    <input type="submit" value="sort_by">
-  </form>
-</div>
 
 <div class="container">
-  <form action="/transactions/filtered/sorted" method="POST">
+  <form action="/transactions/filtered/sorted/<%= @month_num %>/<%= @tag_id %>" method="POST">
     <label for="newest">New</label>
     <input type="radio" name="sort_by" value="newest" checked>
     <label for="oldest">Old</label>
-    <input type="radio" name="sort_by" value="oldest">
-    <input type="submit" value="sort by & filtered">
+    <% if @sort_by == "oldest" %>
+      <input type="radio" name="sort_by" value="oldest" checked>
+    <% else %>
+      <input type="radio" name="sort_by" value="oldest">
+    <% end %>
+    <input type="submit" value="sort by">
   </form>
 </div>
 

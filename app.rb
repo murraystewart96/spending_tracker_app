@@ -3,6 +3,7 @@ require('sinatra/contrib/all')
 require_relative('controllers/transaction_controller')
 require_relative('controllers/tag_controller')
 require_relative('controllers/merchant_controller')
+require_relative('controllers/user_controller')
 also_reload('models/*')
 also_reload('controllers/*')
 

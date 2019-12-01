@@ -2,12 +2,13 @@ require('pry')
 require_relative('../models/merchant')
 require_relative('../models/tag')
 require_relative('../models/transaction')
+require_relative('../models/user')
 
 
 Transaction.delete_all()
 Merchant.delete_all()
 Tag.delete_all()
-
+User.delete_all()
 
 
 
@@ -77,6 +78,17 @@ transaction3 = Transaction.new(transaction_info_3)
 transaction3.save()
 transaction3.save()
 
+user_info = {
+  'first_name' => 'Scrooge',
+  'last_name' => 'McDuck',
+  'balance_warning' => 100
+}
+
+user = User.new(user_info)
+user.save()
+user.first_name = "changed"
+user.balance = 300
+user.update()
 
 binding.pry
 

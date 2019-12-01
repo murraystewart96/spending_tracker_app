@@ -15,5 +15,5 @@ end
 post('/tags') do
   tag = Tag.new(params)
   tag.save()
-  redirect(:"tags/new")
+  redirect(:"transactions/new")
 end

@@ -1,0 +1,14 @@
+<h1>*** Current Balance: £<%= @user.balance %></h1>
+
+
+<% if (@user.balance_warning()) %>
+  <h2><%= @user.balance_warning() %></h2>
+<% end %>
+
+<form action="/users" method = "POST">
+
+     <label for="add-funds">Amount:£</label>
+     <input type="number" id="add-funds" name="amount">
+
+     <input type="submit" value="Add Funds">
+</form>

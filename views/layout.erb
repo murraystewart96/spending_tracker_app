@@ -8,6 +8,12 @@
 
   <style>
 
+
+    h1 {
+      text-align: center;
+    }
+
+
     ul.nav-bar {
       display: flex;
       flex-direction: column;
@@ -19,19 +25,64 @@
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      height: 4em;
+      height: 10em;
       background-color: blue;
 
     }
 
     ul.merchants li {
       background-color: red;
-      width: 20%;
+
     }
 
     .container{
       display: flex;
       background-color: green;
+      padding:
+    }
+
+    .vertical {
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    .container-dropdown {
+      display: flex;
+      justify-content: space-around;
+    }
+
+
+
+    .dropdown {
+      background-color: yellow;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: 3px solid coral;
+    }
+
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      z-index: 1;
+    }
+
+    /* display the content when hovering over */
+    .dropdown:hover .dropdown-content {display: block;}
+
+    /* changed the background colour of the dropdown button */
+    .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+    .topcorner{
+       position:absolute;
+       top:0;
+       right:0;
+       margin: 0px 30px;
     }
 
   </style>
@@ -42,9 +93,8 @@
     <nav>
       <ul class="nav-bar">
         <li><a href="/transactions">View All Transactions</a></li>
-        <li><a href="/transactions/new">New Transaction</a></li>
-        <li><a href="/merchants/new">Create Merchant</a></li>
-        <li><a href="/tags/new">Create Tag</a></li>
+        <li><a href="/transactions/new">Add Transaction</a></li>
+        <li><a href="/users/add-funds">Add Funds</a></li>
       </ul>
     </nav>
     <!-- content being yielded to -->

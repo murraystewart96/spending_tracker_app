@@ -8,10 +8,11 @@ require('pry')
 
 
 get('/transactions') do
-  @transactions = Transaction.all_ordered_by_timestamp()
-  @total_amount = Transaction.total_amount()
+  @transactions = Transaction.all_sorted_by_timestamp()
+  @transactions_amount = Transaction.sum_transactions(@transactions)
   @merchants = Merchant.all()
   @tags = Tag.all()
+  @user = User.get_user()
   @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
               "Aug", "Sep", "Oct", "Nov", "Dec"]
   # binding.pry
@@ -25,52 +26,110 @@ get('/transactions/new') do
   erb(:"transactions/new")
 end
 
+get('/transactions/new/failed') do
+  @transaction_failed = true
+  @merchants = Merchant.all()
+  @tags = Tag.all()
+  erb(:"transactions/new")
+end
+
 
 post('/transactions') do
   transaction = Transaction.new(params)
-  transaction.save()
-  redirect('/transactions')
+  @user = User.get_user()
+
+  if (@user.can_afford(transaction.amount))
+    @user.pay_for_transaction(transaction.amount)
+    transaction.save()
+
+    @balance_warning = @user.balance_warning()
+    if(@balance_warning)
+      redirect('/users/add-funds')
+    end
+    redirect('/transactions')
+
+  else
+    redirect('/transactions/new/failed')
+  end
 end
 
+
+get ('/transactions/failed') do
+  erb(:"transactions/")
+end
+
+#INDEX
 post('/transactions/filtered') do
-  @month_num = params['month_num'].to_i()
-  @tag_id = params['tag_id'].to_i()
-  @transactions = Transaction.transactions_filtered(@month_num, @tag_id)
-  @total_amount = Transaction.total_amount()
-  @tags = Tag.all()
+
   @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
               "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  @tags = Tag.all()
+  @user = User.get_user()
+
+  @month_num = params['month_num'].to_i()
+  @tag_id = params['tag_id'].to_i()
+
+  @month = @months[@month_num-1]
+  @tag = Tag.find_by_id(@tag_id) if (@tag_id != 0)
+
+  @filtered_by_month_and_tag = true if(@tag_id != 0 && @month_num != 0)
+  @filtered_tag_only = true if(@tag_id != 0 && @month_num == 0)
+  @filtered_month_only = true if(@month_num != 0 && @tag_id == 0)
+
+  @transactions = Transaction.transactions_filtered(@month_num, @tag_id)
+  @transactions_amount = Transaction.sum_transactions(@transactions)
+
   erb(:"transactions/index")
 end
 
+### FIX TRAILING / ###
+post('/transactions/filtered/sorted/') do
 
-post('/transactions/sorted') do
-  sort_by = params['sort_by']
-  @transactions = Transaction.all_ordered_by_timestamp(sort_by)
-  @total_amount = Transaction.total_amount()
-  @tags = Tag.all()
   @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
               "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  @tags = Tag.all()
+  @user = User.get_user()
+
+  @sort_by = params['sort_by']
+  @month_num = params['month_num'].to_i()
+  @tag_id = params['tag_id'].to_i()
+
+  @month = @months[@month_num-1]
+  @tag = Tag.find_by_id(@tag_id) if (@tag_id != 0)
+
+  @filtered_by_month_and_tag = true if(@tag_id != 0 && @month_num != 0)
+  @filtered_tag_only = true if(@tag_id != 0 && @month_num == 0)
+  @filtered_month_only = true if(@month_num != 0 && @tag_id == 0)
+
+  @transactions = Transaction.all_sorted_by_timestamp(@sort_by)
+  @transactions_amount = Transaction.sum_transactions(@transactions)
 
   erb(:"transactions/index")
 end
 
 post('/transactions/filtered/sorted/:month_num/:tag_id') do
-  sort_by = params['sort_by']
-  @transactions = Transaction.all_ordered_by_timestamp(sort_by)
-  @total_amount = Transaction.total_amount()
-  @tags = Tag.all()
   @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
               "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+  @tags = Tag.all()
+  @user = User.get_user()
+
+  @sort_by = params['sort_by']
   @month_num = params['month_num'].to_i()
   @tag_id = params['tag_id'].to_i()
-  @transactions = Transaction.transactions_filtered(@month_num, @tag_id)
-  @total_amount = Transaction.total_amount()
-  @tags = Tag.all()
-  @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-              "Aug", "Sep", "Oct", "Nov", "Dec"]
-  erb(:"transactions/index")
+
+  @month = @months[@month_num-1]
+  @tag = Tag.find_by_id(@tag_id) if (@tag_id != 0)
+
+  @filtered_by_month_and_tag = true if(@tag_id != 0 && @month_num != 0)
+  @filtered_tag_only = true if(@tag_id != 0 && @month_num == 0)
+  @filtered_month_only = true if(@month_num != 0 && @tag_id == 0)
+
+  @transactions = Transaction.transactions_filtered(@month_num, @tag_id, @sort_by)
+  @transactions_amount = Transaction.sum_transactions(@transactions)
 
   erb(:"transactions/index")
+
 end

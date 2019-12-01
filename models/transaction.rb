@@ -84,8 +84,8 @@ class Transaction
   end
 
 
-  def self.transactions_filtered(month_num, tag_id)
-    transactions = Transaction.all_ordered_by_timestamp()
+  def self.transactions_filtered(month_num, tag_id, sort_by = "newest")
+    transactions = Transaction.all_sorted_by_timestamp(sort_by)
 
     if(month_num != 0)
       transactions = Transaction.transactions_by_month(transactions, month_num)
@@ -104,7 +104,7 @@ class Transaction
   end
 
 
-  def self.all_ordered_by_timestamp(order_by = "newest")
+  def self.all_sorted_by_timestamp(order_by = "newest")
 
     if (order_by == "newest")
       sql_query = "SELECT *
@@ -132,6 +132,14 @@ class Transaction
     end
 
     return running_total + 0.0
+  end
+
+  def self.sum_transactions(transactions)
+    running_total = 0
+    for transaction in transactions
+      running_total += transaction.amount
+    end
+    return running_total
   end
 
 end
