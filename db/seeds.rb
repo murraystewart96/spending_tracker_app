@@ -65,7 +65,7 @@ transaction_info_3 = {
   'description' => 'paying back loan',
   'amount' => 300,
   'merchant_id' => bank_of_scotland.id,
-  'tag_id' => banking.id
+  'tag_id' => banking.id,
 }
 
 transaction1 = Transaction.new(transaction_info_1)
@@ -77,6 +77,24 @@ transaction2.save()
 transaction3 = Transaction.new(transaction_info_3)
 transaction3.save()
 transaction3.save()
+
+transactions = [transaction1, transaction2, transaction3]
+
+
+for n in 1...600
+  rand_num = rand(0..2)
+  rand_month = rand(1..12)
+  transactions[rand_num].save()
+
+  if (rand_month < 10)
+    transactions[rand_num].update_timestamp("2019-0#{rand_month}-01 15:37:08.159519")
+  else
+    transactions[rand_num].update_timestamp("2019-#{rand_month}-01 15:37:08.159519")
+  end
+end
+
+
+transaction3.update_timestamp('2019-07-01 15:37:08.159519')
 
 user_info = {
   'first_name' => 'Scrooge',

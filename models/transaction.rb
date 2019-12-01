@@ -45,6 +45,15 @@ class Transaction
   end
 
 
+  def update_timestamp(timestamp)
+    sql_query = "UPDATE transactions
+    SET transaction_timestamp = $1
+    WHERE id = $2;"
+    values =[timestamp, @id]
+    SqlRunner.run(sql_query, values)
+  end
+
+
   def timestamp()
     sql_query = "SELECT transaction_timestamp
     FROM transactions
@@ -72,6 +81,7 @@ class Transaction
   end
 
 
+
   def self.transactions_by_tag(transactions, tag_id)
     tag_transactions = []
 
@@ -85,10 +95,11 @@ class Transaction
 
 
   def self.transactions_filtered(month_num, tag_id, sort_by = "newest")
-    transactions = Transaction.all_sorted_by_timestamp(sort_by)
 
-    if(month_num != 0)
-      transactions = Transaction.transactions_by_month(transactions, month_num)
+    if(month_num ==0)
+      transactions = Transaction.all_sorted_by_timestamp(sort_by)
+    else
+      transactions = Transaction.select_by_month(month_num)
     end
 
     if(tag_id != 0)
@@ -141,5 +152,45 @@ class Transaction
     end
     return running_total
   end
+
+
+
+  def self.monthly_spending()
+    months_spending = []
+
+
+    for month_num in 1..12
+      transactions_month = Transaction.select_by_month(month_num)
+      spending = Transaction.sum_transactions(transactions_month)
+      months_spending.push(spending)
+    end
+
+    return months_spending
+  end
+
+
+  def self.average_monthly_spending()
+    spending = Transaction.monthly_spending()
+    spending.delete(0)
+    return (spending.sum() / spending.size().to_f()).round(2)
+  end
+
+
+
+  def self.select_by_month(month)
+    sql_query = "SELECT *
+    FROM transactions
+    WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1"
+
+    if(month.digits() == 1)
+      new_month = "0"+ month.to_s()
+      month = new_month.to_i()
+    end
+
+    values = [month]
+    transactions_info = SqlRunner.run(sql_query, values)
+    return transactions_info.map{|trans_info| Transaction.new(trans_info)}
+  end
+
 
 end

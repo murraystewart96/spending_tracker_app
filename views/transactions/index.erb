@@ -19,6 +19,18 @@
 <% end %>
 
 
+<div class ="container">
+  <form action="/transactions" method="get">
+    <input type="submit" value="Transactions">
+  </form>
+
+  <form action="/transactions/monthly-spending" method="get">
+    <input type="submit" value="Monthly Spending">
+  </form>
+
+</div>
+
+
 <div class="container">
   <form action="/transactions/filtered" method="POST">
     <label for="month-select">Month:</label>
@@ -65,12 +77,36 @@
   </form>
 </div>
 
+<% if (@transaction_view) %>
+  <% for transaction in @transactions %>
+    <p>Merchant: <%= transaction.merchant().name %></p>
+    <p>Tag: <%= transaction.tag().name%></p>
+    <p>Description: <%= transaction.description %></p>
+    <p>Amount: <%= transaction.amount %></p>
+    <p>Timestamp: <%= transaction.timestamp() %></p>
+  <% end %>
+<% end %>
 
 
-<% for transaction in @transactions %>
-  <p>Merchant: <%= transaction.merchant().name %></p>
-  <p>Tag: <%= transaction.tag().name%></p>
-  <p>Description: <%= transaction.description %></p>
-  <p>Amount: <%= transaction.amount %></p>
-  <p>Timestamp: <%= transaction.timestamp() %></p>
+
+
+
+<% if (@monthly_spending_view) %>
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Money Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% for month in 0..11 %>
+      <tr>
+        <td><a href="/transactions/filtered/<%= month + 1 %>"><%= @months[month] %></a></td>
+        <td><%= @months_spending[month]%></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
 <% end %>
