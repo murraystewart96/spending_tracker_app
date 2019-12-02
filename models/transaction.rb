@@ -69,50 +69,19 @@ class Transaction
   end
 
 
-  def self.transactions_by_month(transactions, month_num)
-    trans_in_month = []
-    for transaction in transactions
-      month = transaction.date().split('-')[1].to_i()
-      if (month == month_num)
-        trans_in_month.push(transaction)
-      end
-    end
-    return trans_in_month
-  end
-
-
-
-  def self.transactions_by_tag(transactions, tag_id)
-    tag_transactions = []
-
-    for transaction in transactions
-      if (transaction.tag_id == tag_id)
-        tag_transactions.push(transaction)
-      end
-    end
-    return tag_transactions
-  end
-
-
-  def self.transactions_filtered(month_num, tag_id, sort_by = "newest")
-
-    if(month_num ==0)
-      transactions = Transaction.all_sorted_by_timestamp(sort_by)
-    else
-      transactions = Transaction.select_by_month(month_num)
-    end
-
-    if(tag_id != 0)
-      transactions =  Transaction.transactions_by_tag(transactions, tag_id)
-    end
-    return transactions
-  end
-
-
-  def time()
-    timestamp = timestamp()
-    return timestamp.split(' ')[1]
-  end
+  # def self.transactions_filtered(month_num, tag_id, sort_by = "newest")
+  #
+  #   if(month_num ==0)
+  #     transactions = Transaction.all_sorted_by_timestamp(sort_by)
+  #   else
+  #     transactions = Transaction.select_by_month(month_num)
+  #   end
+  #
+  #   if(tag_id != 0)
+  #     transactions =  Transaction.transactions_by_tag(transactions, tag_id)
+  #   end
+  #   return transactions
+  # end
 
 
   def self.all_sorted_by_timestamp(order_by = "newest")
@@ -134,16 +103,39 @@ class Transaction
   end
 
 
-  def self.total_amount()
-    transactions = Transaction.all()
-    running_total = 0
 
-    for transaction in transactions
-      running_total += transaction.amount
+  def self.transactions_filtered(month_num, tag_id, sort_by = 'newest')
+
+    if (month_num == 0 && tag_id ==0)
+      transactions = Transaction.all_sorted_by_timestamp(sort_by)
+    elsif(month_num != 0 && tag_id == 0)
+      transactions = Transaction.select_by_month(month_num, sort_by)
+    elsif(tag_id != 0 && month_num == 0)
+      transactions = Transaction.select_by_tag_id(tag_id, sort_by)
+    else
+      transactions = Transaction.select_by_tag_and_month(tag_id, month_num, sort_by)
     end
 
-    return running_total + 0.0
+    return transactions
+
   end
+
+
+  def time()
+    timestamp = timestamp()
+    return timestamp.split(' ')[1]
+  end
+
+
+
+  def self.total_cost()
+    sql_query = "SELECT SUM(amount)
+    FROM transactions;"
+    result = SqlRunner.run(sql_query)[0]
+    return result['sum']
+  end
+
+
 
   def self.sum_transactions(transactions)
     running_total = 0
@@ -158,11 +150,12 @@ class Transaction
   def self.monthly_spending()
     months_spending = []
 
-
     for month_num in 1..12
-      transactions_month = Transaction.select_by_month(month_num)
-      spending = Transaction.sum_transactions(transactions_month)
-      months_spending.push(spending)
+      sql_query = "SELECT SUM(amount) FROM transactions
+      WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1"
+      values = [month_num]
+      result = SqlRunner.run(sql_query, values)[0]
+      months_spending.push(result['sum'].to_f())
     end
 
     return months_spending
@@ -177,10 +170,22 @@ class Transaction
 
 
 
-  def self.select_by_month(month)
-    sql_query = "SELECT *
-    FROM transactions
-    WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1"
+  def self.select_by_month(month, sort_by)
+
+    if (sort_by == "newest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
+      ORDER BY transaction_timestamp
+      DESC;"
+    elsif (sort_by == "oldest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
+      ORDER BY transaction_timestamp
+      ASC;"
+    end
+
 
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()
@@ -193,12 +198,45 @@ class Transaction
   end
 
 
-  def self.select_by_tag_and_month(tag_id, month)
+  def self.select_by_tag_id(tag_id, sort_by)
+    if (sort_by == "newest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE tag_id = $1
+      ORDER BY transaction_timestamp
+      DESC"
+    elsif (sort_by == "oldest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE tag_id = $1
+      ORDER BY transaction_timestamp
+      ASC"
+    end
 
-    sql_query = "SELECT *
-    FROM transactions
-    WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
-    AND tag_id = $2"
+    values = [tag_id]
+    transactions_info = SqlRunner.run(sql_query, values)
+    return transactions_info.map{|trans_info| Transaction.new(trans_info)}
+  end
+
+
+
+  def self.select_by_tag_and_month(tag_id, month, sort_by)
+
+    if (sort_by == "newest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
+      AND tag_id = $2
+      ORDER BY transaction_timestamp
+      DESC"
+    elsif (sort_by == "oldest")
+      sql_query = "SELECT *
+      FROM transactions
+      WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
+      AND tag_id = $2
+      ORDER BY transaction_timestamp
+      ASC"
+    end
 
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()

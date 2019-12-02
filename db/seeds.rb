@@ -49,21 +49,21 @@ banking.save()
 
 transaction_info_1 = {
   'description' => 'weekly shop',
-  'amount' => 100,
+  'amount' => 10,
   'merchant_id' => tesco.id,
   'tag_id' => groceries.id
 }
 
 transaction_info_2 = {
   'description' => 'weeklend shop',
-  'amount' => 30,
+  'amount' => 10,
   'merchant_id' => waitrose.id,
   'tag_id' => groceries.id
 }
 
 transaction_info_3 = {
   'description' => 'paying back loan',
-  'amount' => 300,
+  'amount' => 10,
   'merchant_id' => bank_of_scotland.id,
   'tag_id' => banking.id,
 }

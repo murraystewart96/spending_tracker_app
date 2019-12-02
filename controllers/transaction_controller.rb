@@ -9,7 +9,7 @@ require('pry')
 
 get('/transactions') do
   @transactions = Transaction.all_sorted_by_timestamp()
-  @transactions_amount = Transaction.sum_transactions(@transactions)
+  @transactions_amount = Transaction.total_cost()
   @merchants = Merchant.all()
   @tags = Tag.all()
   @user = User.get_user()
@@ -26,12 +26,14 @@ get('/transactions/monthly-spending') do
   @user = User.get_user()
   @tags = Tag.all()
   @transactions = Transaction.all_sorted_by_timestamp()
-  @transactions_amount = Transaction.sum_transactions(@transactions)
+  @transactions_amount = Transaction.total_cost()
 
 
   @monthly_spending_view = true
   @months_spending = Transaction.monthly_spending()
   @average_monthly_spending = Transaction.average_monthly_spending()
+
+
   erb(:"transactions/index")
 
 end
@@ -64,7 +66,6 @@ post('/transactions') do
       redirect('/users/add-funds')
     end
     redirect('/transactions')
-
   else
     redirect('/transactions/new/failed')
   end
@@ -74,6 +75,7 @@ end
 get ('/transactions/failed') do
   erb(:"transactions/")
 end
+
 
 #INDEX
 post('/transactions/filtered') do
@@ -124,7 +126,7 @@ post('/transactions/filtered/sorted/') do
 
   @transactions = Transaction.all_sorted_by_timestamp(@sort_by)
   @transactions_amount = Transaction.sum_transactions(@transactions)
-
+  @transaction_view = true
   erb(:"transactions/index")
 end
 
@@ -149,7 +151,7 @@ post('/transactions/filtered/sorted/:month_num/:tag_id') do
 
   @transactions = Transaction.transactions_filtered(@month_num, @tag_id, @sort_by)
   @transactions_amount = Transaction.sum_transactions(@transactions)
-
+  @transaction_view = true
   erb(:"transactions/index")
 
 end
@@ -161,7 +163,6 @@ get('/transactions/filtered/:month_num') do
 
   @tags = Tag.all()
   @user = User.get_user()
-
 
   @month_num = params['month_num'].to_i()
 
