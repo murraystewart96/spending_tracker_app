@@ -31,53 +31,55 @@
 </div>
 
 
-<div class="container">
-  <form action="/transactions/filtered" method="POST">
-    <label for="month-select">Month:</label>
-    <select name="month_num" id="months">
-      <option selected value="0" >All</option>
-      <% for month in @months%>
-        <% if (@month_num == @months.index(month)+1) %>
-          <option selected value=<%= @month_num %>><%= month %></option>
-        <% else %>
-          <option value=<%= (@months.index(month)+1) %>><%= month %></option>
-        <% end %>
-      <% end  %>
-    </select>
-
-    <label for="tag-select">Tag:</label>
-    <select name= "tag_id" id="tags">
-      <option selected value="0">All</option>
-      <% for tag in @tags%>
-        <% if (@tag_id == tag.id) %>
-          <option selected value=<%= @tag_id %>><%= tag.name %></option>
-        <% else%>
-          <option value="<%= tag.id %>"><%= tag.name %></option>
-        <% end %>
-      <% end %>
-    </select>
-
-    <input type="submit" value="filter">
-
-  </form>
-</div>
-
-
-<div class="container">
-  <form action="/transactions/filtered/sorted/<%= @month_num %>/<%= @tag_id %>" method="POST">
-    <label for="newest">New</label>
-    <input type="radio" name="sort_by" value="newest" checked>
-    <label for="oldest">Old</label>
-    <% if @sort_by == "oldest" %>
-      <input type="radio" name="sort_by" value="oldest" checked>
-    <% else %>
-      <input type="radio" name="sort_by" value="oldest">
-    <% end %>
-    <input type="submit" value="sort by">
-  </form>
-</div>
 
 <% if (@transaction_view) %>
+
+  <div class="container">
+    <form action="/transactions/filtered" method="POST">
+      <label for="month-select">Month:</label>
+      <select name="month_num" id="months">
+        <option selected value="0" >All</option>
+        <% for month in @months%>
+          <% if (@month_num == @months.index(month)+1) %>
+            <option selected value=<%= @month_num %>><%= month %></option>
+          <% else %>
+            <option value=<%= (@months.index(month)+1) %>><%= month %></option>
+          <% end %>
+        <% end  %>
+      </select>
+
+      <label for="tag-select">Tag:</label>
+      <select name= "tag_id" id="tags">
+        <option selected value="0">All</option>
+        <% for tag in @tags%>
+          <% if (@tag_id == tag.id) %>
+            <option selected value=<%= @tag_id %>><%= tag.name %></option>
+          <% else%>
+            <option value="<%= tag.id %>"><%= tag.name %></option>
+          <% end %>
+        <% end %>
+      </select>
+
+      <input type="submit" value="filter">
+
+    </form>
+  </div>
+
+
+  <div class="container">
+    <form action="/transactions/filtered/sorted/<%= @month_num %>/<%= @tag_id %>" method="POST">
+      <label for="newest">New</label>
+      <input type="radio" name="sort_by" value="newest" checked>
+      <label for="oldest">Old</label>
+      <% if @sort_by == "oldest" %>
+        <input type="radio" name="sort_by" value="oldest" checked>
+      <% else %>
+        <input type="radio" name="sort_by" value="oldest">
+      <% end %>
+      <input type="submit" value="sort by">
+    </form>
+  </div>
+
   <% for transaction in @transactions %>
     <p>Merchant: <%= transaction.merchant().name %></p>
     <p>Tag: <%= transaction.tag().name%></p>
@@ -96,7 +98,10 @@
     <thead>
       <tr>
         <th>Month</th>
-        <th>Money Spent</th>
+        <th>Total Spent</th>
+        <% for tag in @tags %>
+        <th><%= tag.name.capitalize() %></th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -104,9 +109,14 @@
       <tr>
         <td><a href="/transactions/filtered/<%= month + 1 %>"><%= @months[month] %></a></td>
         <td><%= @months_spending[month]%></td>
+        <% for tag in @tags %>
+        <td><%=  %></td>
+        <% end %>
       </tr>
     <% end %>
     </tbody>
   </table>
+
+  <h3>Average Monthly Spending:£<%= @average_monthly_spending %></h3>
 
 <% end %>

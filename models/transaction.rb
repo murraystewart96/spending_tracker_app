@@ -193,4 +193,25 @@ class Transaction
   end
 
 
+  def self.select_by_tag_and_month(tag_id, month)
+
+    sql_query = "SELECT *
+    FROM transactions
+    WHERE EXTRACT (MONTH FROM transaction_timestamp) = $1
+    AND tag_id = $2"
+
+    if(month.digits() == 1)
+      new_month = "0"+ month.to_s()
+      month = new_month.to_i()
+    end
+
+    values = [month, tag_id]
+    transactions_info = SqlRunner.run(sql_query, values)
+
+    return transactions_info.map{|trans_info| Transaction.new(trans_info)}
+  end
+
+
+
+
 end

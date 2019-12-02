@@ -81,7 +81,7 @@ transaction3.save()
 transactions = [transaction1, transaction2, transaction3]
 
 
-for n in 1...600
+for n in 1...50
   rand_num = rand(0..2)
   rand_month = rand(1..12)
   transactions[rand_num].save()

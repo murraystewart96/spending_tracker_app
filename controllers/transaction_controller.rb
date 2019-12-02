@@ -31,7 +31,7 @@ get('/transactions/monthly-spending') do
 
   @monthly_spending_view = true
   @months_spending = Transaction.monthly_spending()
-
+  @average_monthly_spending = Transaction.average_monthly_spending()
   erb(:"transactions/index")
 
 end
