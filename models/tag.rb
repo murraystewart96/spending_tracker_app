@@ -50,6 +50,10 @@ class Tag
     return transactions_info.map{|info| Transaction.new(info)}
   end
 
+
+
+
+
   def transactions_in_month(month)
     sql_query = "SELECT *
     FROM transactions
@@ -68,12 +72,20 @@ class Tag
   end
 
 
-  def transactions_sum()
-    running_total = 0
-    for transaction in transactions()
-      running_total += transaction.amount
+  def self.monthly_spending_for_each_tag()
+    tags = Tag.all()
+    tags_monthly_spending = []
+    for tag in tags
+      tags_monthly_spending.push(Transaction.monthly_spending_for_tag(tag.id))
     end
-    return running_total
+
+    return tags_monthly_spending
+  end
+
+
+  def average_monthly_spending()
+    tags_monthly_spending = (Transaction.monthly_spending_for_tag(@id))
+    return (tags_monthly_spending.sum() / 12.0).round(2)
   end
 
 
