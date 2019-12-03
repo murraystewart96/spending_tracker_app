@@ -96,10 +96,11 @@
     <p>Description: <%= @transactions[index].description %></p>
     <p>Amount: <%= @transactions[index].amount %></p>
     <p>Timestamp: <%= @transactions[index].timestamp() %></p>
+    <a href="/transactions/<%= @transactions[index].id %>/edit">Edit</a>
     <% end %>
   <% end  %>
 
-  <p><%= Transaction.get_visible_transactions %></p>
+
 
 
   <form action="/transactions/load-more" method="get">

@@ -11,6 +11,9 @@ get('/transactions') do
   @transactions = Transaction.all_sorted_by_timestamp()
   @transactions_amount = Transaction.total_cost()
   Transaction.set_visible_transactions(10)
+  @month_num = 0
+  @tag_id = 0
+  @merchant_id = 0
   @merchants = Merchant.all()
   @tags = Tag.all()
   @user = User.get_user()
@@ -18,6 +21,12 @@ get('/transactions') do
               "Aug", "Sep", "Oct", "Nov", "Dec"]
   @transaction_view = true
   erb(:"transactions/index")
+end
+
+post ('/transactions/:id/update') do
+  @transaction = Transaction.new(params)
+  @transaction.update()
+  erb(:"transactions/show")
 end
 
 
@@ -93,6 +102,14 @@ get ('/transactions/failed') do
   erb(:"transactions/")
 end
 
+get ('/transactions/:id/edit') do
+  id = params['id'].to_i()
+  @merchants = Merchant.all()
+  @tags = Tag.all()
+  @transaction = Transaction.find_by_id(id)
+  erb(:"transactions/edit")
+end
+
 
 #INDEX
 post('/transactions/filtered') do
@@ -149,12 +166,14 @@ post('/transactions/filtered/sorted/') do
   @tag = Tag.find_by_id(@tag_id) if (@tag_id != 0)
   @merchant = Merchant.find_by_id(@merchant_id) if (@merchant_id != 0)
 
-  @filtered_by_month_and_tag = true if(@tag_id != 0 && @month_num != 0)
-  @filtered_tag_only = true if(@tag_id != 0 && @month_num == 0)
-  @filtered_month_only = true if(@month_num != 0 && @tag_id == 0)
+  @month_filter_name = "(#{@months[@month_num-1]})" if (@month_num != 0)
+  @tag_filter_name = "(#{@tag.name})" if (@tag_id != 0)
+  @merchant_filter_name = "(#{@merchant.name})" if (@merchant_id != 0)
+  @filtered = true if(@tag_id != 0 || @month_num != 0 || @merchant_id != 0)
+
 
   @transactions = Transaction.all_sorted_by_timestamp(@sort_by)
-  @transactions_amount = Transaction.sum_transactions(@transactions)
+  @transactions_amount = Transaction.total_cost()
   @transaction_view = true
   erb(:"transactions/index")
 end
@@ -177,12 +196,14 @@ post('/transactions/filtered/sorted/:month_num/:tag_id/:merchant_id') do
   @tag = Tag.find_by_id(@tag_id) if (@tag_id != 0)
   @merchant = Merchant.find_by_id(@merchant_id) if (@merchant_id != 0)
 
+  @month_filter_name = "(#{@months[@month_num-1]})" if (@month_num != 0)
+  @tag_filter_name = "(#{@tag.name})" if (@tag_id != 0)
+  @merchant_filter_name = "(#{@merchant.name})" if (@merchant_id != 0)
+  @filtered = true if(@tag_id != 0 || @month_num != 0 || @merchant_id != 0)
 
-  @filtered_by_month_and_tag = true if(@tag_id != 0 && @month_num != 0)
-  @filtered_tag_only = true if(@tag_id != 0 && @month_num == 0)
-  @filtered_month_only = true if(@month_num != 0 && @tag_id == 0)
 
   @transactions = Transaction.transactions_filtered(@month_num, @tag_id, @merchant_id)
+  @transactions_amount = Transaction.sum_transactions(@transactions)
   @transaction_view = true
   erb(:"transactions/index")
 
@@ -198,9 +219,16 @@ get('/transactions/filtered/:month_num') do
   @merchants = Merchant.all()
 
   @month_num = params['month_num'].to_i()
+  @tag_id = 0
+  @merchant_id = 0
 
   @month = @months[@month_num-1]
-  @filtered_month_only = true
+
+  #Information for display output
+  @month_filter_name = "(#{@months[@month_num-1]})" if (@month_num != 0)
+  @tag_filter_name = "(#{@tag.name})" if (@tag_id != 0)
+  @merchant_filter_name = "(#{@merchant.name})" if (@merchant_id != 0)
+  @filtered = true if(@tag_id != 0 || @merchant_id != 0 || @month_num !=0)
 
   @transactions = Transaction.transactions_filtered(@month_num, 0, 0)
   @transactions_amount = Transaction.sum_transactions(@transactions)

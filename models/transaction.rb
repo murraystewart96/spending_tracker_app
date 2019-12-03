@@ -46,6 +46,28 @@ class Transaction
     return transactions_info.map{|trans_info| Transaction.new(trans_info)}
   end
 
+  def update ()
+    sql_query = "UPDATE transactions
+    SET (description, amount, transaction_timestamp, merchant_id, tag_id)
+    = ($1, $2, CURRENT_TIMESTAMP, $3, $4)
+    WHERE id = $5"
+    values = [@description, @amount, @merchant_id,
+              @tag_id, @id]
+    SqlRunner.run(sql_query, values)
+  end
+
+
+  def self.find_by_id(id)
+    sql_query = "SELECT *
+    FROM transactions
+    WHERE id = $1"
+    values = [id]
+
+    trans_info = SqlRunner.run(sql_query, values)[0]
+    return Transaction.new(trans_info)
+  end
+
+
   def merchant()
     return Merchant.find_by_id(@merchant_id)
   end
