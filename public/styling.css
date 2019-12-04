@@ -1,0 +1,353 @@
+body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  /* background-image: url('/images/background.jpeg'); */
+  background-size: cover;
+}
+
+main {
+  color: black;
+}
+
+/* styling for header (nav bar) */
+header img {
+  height: 80px;
+  margin-left: 40px;
+}
+
+header {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 25px 0 black;
+}
+
+header * {
+  display: inline;
+}
+
+header li {
+  padding: 10px;
+  margin: 20px;
+}
+
+header li:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+header li a {
+  color: black;
+  text-decoration: none;
+}
+
+/* styling for header (nav bar) */
+
+.container-background-add-trans {
+  background-image: url('/images/background-money-tracker.jpg');
+  /* background-image: url('/images/money-tracker-funds.jpg'); */
+  /* Full height */
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+}
+
+.container-background-funds {
+  background-image: url('/images/money-tracker-funds.jpg');
+  /* Full height */
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+}
+
+.transaction-header {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%,
+  rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+}
+
+.container-background-transactions {
+  background-image: url('/images/transactions-background.jpg');
+  /* Full height */
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+}
+
+.content-container {
+  margin-top: 80px;
+  padding: 30px;
+}
+
+.content-container-funds {
+  margin-top: 200px;
+  padding: 30px;
+}
+
+h1.title {
+  text-align: center;
+  margin: 20px 0px 50px 0px;
+}
+
+h2.money-display{
+  width: 50%;
+  border: 3px none white;
+  color: white;
+}
+
+.btn {
+  border: 3px none white;
+  border-radius: 30px;
+  padding: 8px 12px;
+  margin: 10px 20px 5px 0px;
+  cursor:pointer;
+  background-color: #1E90FF;
+  font-size: 16px;
+}
+
+.btn-add {
+  border: 3px none white;
+  border-radius: 15px;
+  padding: 8px 6px;
+  margin: 5px 5px 5px 5px;
+  cursor:pointer;
+  background-color: #1E90FF;
+  font-size: 12px;
+}
+
+.btn-filter {
+  border: 3px none white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 10px 20px 5px 0px;
+  cursor:pointer;
+  background-color: #1E90FF;
+  font-size: 14px;
+}
+
+.btn-sort {
+  border: 3px none white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin: 10px 20px 5px 0px;
+  cursor:pointer;
+  background-color: #1E90FF;
+  font-size: 14px;
+}
+
+
+ul.nav-bar {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 1em;
+}
+
+ul.merchants {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 10em;
+  background-color: blue;
+
+}
+
+ul.merchants li {
+}
+
+.container{
+  display: flex;
+
+}
+
+.container-center {
+  display: flex;
+  justify-content: center;
+}
+
+.container-funds {
+  display: flex;
+  justify-content: center;
+}
+
+.container-center-column{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-spending-view{
+  display: flex;
+  justify-content:;
+}
+
+.container-transaction {
+  display: flex;
+}
+
+.container-transaction div{
+  margin: 10px 5px 10px 0px;
+}
+
+.container-transaction div.item {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding-left:3px;
+  background-color: #00acff;
+}
+
+.container-transaction p {
+  /* border: 3px solid orange; */
+  margin: 10px 5px 10px 0px;
+}
+
+.transaction-edit {
+  margin: 0px 0px 100px 0px;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.container-dropdown {
+  display: flex;
+  justify-content: center;
+}
+
+.table{
+  display: flex;
+  background-color: white;
+}
+
+table {
+  background-color: white;
+}
+
+
+
+
+.dropdown {
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  margin: 0px 40px 0px 40px;
+}
+
+
+.dropbtn {
+  padding: 16px;
+  border: 3px solid none;
+  border-radius: 30px;
+  background-color: #125ad6;
+  font-size:16px;
+  min-width: 100px;
+}
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  z-index: 1;
+}
+
+
+/* display the content when hovering over */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* changed the background colour of the dropdown button */
+.dropdown:hover .dropbtn {background-color: #00d4ff;}
+
+
+.average-spendings {
+  display: flex;
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%,
+  rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  color: white;
+}
+
+.linear-background {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%,
+  rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  color: white;
+}
+
+.average-spendings h3 {
+
+  margin-left: 10px;
+}
+.average-spendings li {
+  margin-top: 5px;
+}
+
+.average-tags{
+  margin-right:30px;
+}
+.average-merchants{
+  margin-left: 30px;
+}
+
+
+.topcorner{
+   position:absolute;
+   top:0;
+   right:0;
+   margin: 0px 30px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  margin-top: 30px;
+}
+
+td.tag {
+  background-color : green;
+}
+
+td.merchant {
+  background-color : orange;
+}
+
+td a {
+  color: white;
+}
+
+td.month
+{
+  background-color: #1c1cbd;
+  color: white;
+}
+
+th.blank,
+td.blank {
+  width: 20px;
+  border: none;
+}
+
+.table-key {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 30px;
+}
+
+.tag-key{
+  background-color: green;
+  padding: 10px;
+}
+
+.merchant-key{
+  background-color: orange;
+  padding: 10px;
+}

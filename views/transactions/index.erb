@@ -85,12 +85,12 @@
           <% else %>
             <input type="radio" name="sort_by" value="oldest">
           <% end %>
-          <input class="btn" type="submit" value="sort by">
+          <input class="btn-sort" type="submit" value="sort by">
         </form>
       </div>
 
 
-
+      <br>
 
       <% for index in 0..Transaction.get_visible_transactions() %>
       <% if (@transactions[index]) %>
@@ -108,9 +108,15 @@
 
 
       <% if (!@filtered)%>
-        <form action="/transactions/load-more" method="get">
-          <input class="btn" type="submit" value="Load More">
-        </form>
+        <% if(@sort_by) %>
+          <form action="/transactions/load-more/<%= @sort_by %>" method="get">
+            <input class="btn" type="submit" value="Load More">
+          </form>
+        <%else %>
+          <form action="/transactions/load-more" method="get">
+            <input class="btn" type="submit" value="Load More">
+          </form>
+        <% end %>
       <% end %>
 
     <% end %>

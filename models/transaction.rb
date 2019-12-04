@@ -15,16 +15,18 @@ class Transaction
     @date = info['transaction_timestamp']
     @merchant_id = info['merchant_id'].to_i()
     @tag_id = info['tag_id'].to_i()
-
   end
+
 
   def self.get_visible_transactions()
     return @@visible_transactions
   end
 
+
   def self.set_visible_transactions(amount)
     @@visible_transactions = amount
   end
+
 
   def save()
     sql_query = "INSERT INTO transactions
@@ -35,16 +37,19 @@ class Transaction
     @id = result[0]['id'].to_i()
   end
 
+
   def self.delete_all()
     sql_query = "DELETE FROM transactions;"
     SqlRunner.run(sql_query)
   end
+
 
   def self.all()
     sql_query = "SELECT * FROM transactions"
     transactions_info = SqlRunner.run(sql_query)
     return transactions_info.map{|trans_info| Transaction.new(trans_info)}
   end
+
 
   def update ()
     sql_query = "UPDATE transactions
@@ -72,6 +77,7 @@ class Transaction
     return Merchant.find_by_id(@merchant_id)
   end
 
+
   def tag()
     return Tag.find_by_id(@tag_id)
   end
@@ -95,11 +101,11 @@ class Transaction
     return timestamp_info[0]['transaction_timestamp'].split('.')[0]
   end
 
+
   def date()
     timestamp = timestamp()
     return timestamp.split(' ')[0]
   end
-
 
 
   def self.all_sorted_by_timestamp(order_by = "newest")
@@ -121,20 +127,24 @@ class Transaction
   end
 
 
-
+  #WARNING: HORRIBLE METHOD ALERT!!
   def self.transactions_filtered(month_num, tag_id, merchant_id, sort_by = 'newest')
-
+    #hash of filter options
     filter_options = {
       'month' => month_num,
       'tag' => tag_id,
       'merchant' => merchant_id
     }
 
+    #array of filter combinations
     filter_combinations = ["month tag", "month merchant", "tag merchant"]
 
+    #initializng active filter
     active_filter = ""
     filter_count = 0
 
+    #Populating the active filter
+    #and filter count
     filter_options.each do |filter, value|
       if (value != 0)
         active_filter += filter + " "
@@ -142,6 +152,8 @@ class Transaction
       end
     end
 
+    #Filter the transactions according to the number of filters
+    #and the selected filters
     if(filter_count == 0)
       transactions = Transaction.all_sorted_by_timestamp(sort_by)
     elsif(filter_combinations.include?(active_filter.strip!()))
@@ -172,13 +184,13 @@ class Transaction
     return timestamp.split(' ')[1]
   end
 
+
   def self.total_cost()
     sql_query = "SELECT SUM(amount)
     FROM transactions;"
     result = SqlRunner.run(sql_query)[0]
     return result['sum'].to_f()
   end
-
 
 
   def self.sum_transactions(transactions)
@@ -188,7 +200,6 @@ class Transaction
     end
     return running_total.round(2)
   end
-
 
 
   def self.monthly_spending()
@@ -222,7 +233,6 @@ class Transaction
   end
 
 
-
   def self.monthly_spending_for_merchant(merchant_id)
     months_spending = []
 
@@ -246,7 +256,6 @@ class Transaction
   end
 
 
-
   def self.select_by_month(month, sort_by)
 
     if (sort_by == "newest")
@@ -263,7 +272,7 @@ class Transaction
       ASC;"
     end
 
-
+    #formatting month for sql
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()
       month = new_month.to_i()
@@ -314,9 +323,7 @@ class Transaction
     values = [merchant_id]
     transactions_info = SqlRunner.run(sql_query, values)
     return transactions_info.map{|trans_info| Transaction.new(trans_info)}
-
   end
-
 
 
   def self.select_by_tag_and_month(tag_id, month, sort_by)
@@ -337,6 +344,7 @@ class Transaction
       ASC"
     end
 
+    #formatting month for sql
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()
       month = new_month.to_i()
@@ -367,6 +375,7 @@ class Transaction
       ASC"
     end
 
+    #formatting month for sql
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()
       month = new_month.to_i()
@@ -423,6 +432,7 @@ class Transaction
       ASC"
     end
 
+    #formatting month for sql
     if(month.digits() == 1)
       new_month = "0"+ month.to_s()
       month = new_month.to_i()

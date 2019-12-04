@@ -21,16 +21,19 @@ class User
     @id = result[0]['id'].to_i()
   end
 
+
   def self.delete_all()
     sql_query = "DELETE FROM users;"
     SqlRunner.run(sql_query)
   end
+
 
   def self.get_user()
     sql_query = "SELECT * FROM users;"
     user_info = SqlRunner.run(sql_query)[0]
     return User.new(user_info)
   end
+
 
   def can_afford(amount)
     if (@balance - amount >= 0)

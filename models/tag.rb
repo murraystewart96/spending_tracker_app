@@ -11,6 +11,7 @@ class Tag
     @name = info['name']
   end
 
+
   def save()
     sql_query = "INSERT INTO tags (name)
     VALUES ($1) RETURNING id"
@@ -19,16 +20,19 @@ class Tag
     @id = result[0]['id'].to_i()
   end
 
+
   def self.delete_all()
     sql_query = "DELETE FROM tags;"
     SqlRunner.run(sql_query)
   end
+
 
   def self.all()
     sql_query = "SELECT * FROM tags"
     tags_info = SqlRunner.run(sql_query)
     return tags_info.map{|tag_info| Tag.new(tag_info)}
   end
+
 
   def self.find_by_id(id)
     sql_query = "SELECT *
@@ -87,6 +91,5 @@ class Tag
     tags_monthly_spending = (Transaction.monthly_spending_for_tag(@id))
     return (tags_monthly_spending.sum() / 12.0).round(2)
   end
-
 
 end
