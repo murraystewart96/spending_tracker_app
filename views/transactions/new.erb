@@ -1,87 +1,92 @@
 
-
-<div class ="container-dropdown">
-
-  <div class ="dropdown">
-    <button class="dropbtn">Merchants</button>
-    <div class="dropdown-content">
-      <ul class="merchants">
-      <% for merchant in @merchants %>
-        <li><%= merchant.name %></li>
-      <% end %>
-      </ul>
-    </div>
-  </div>
-
-  <div class ="dropdown">
-    <button class="dropbtn">Tags</button>
-    <div class="dropdown-content">
-      <ul class="merchants">
-      <% for tag in @tags %>
-        <li><%= tag.name %></li>
-      <% end %>
-      </ul>
-    </div>
-  </div>
-
-
-</div>
-
-<br>
-<br>
-<div class="container">
-
-  <form action="/merchants" method="POST">
-    <label for="merchant-name">Merchant Name: </label>
-    <input required type="text" id="merchant-name" name="name">
-    <input type="submit" value="Add Merchant">
-  </form>
-
-  <br>
-
-  <form action="/tags" method="POST">
-    <label for="tag-name">Tag Name: </label>
-    <input required type="text" id="tag-name" name="name">
-
-    <input type="submit" value="Add Tag">
-  </form>
-
-</div>
-
-
-<h1>*** Create Transaction ***</h1>
-
-<div class="container" >
-  <form class="vertical" action="/transactions" method="POST">
-
-    <label for="merchant-select">Merchant:</label>
-    <select name="merchant_id" id="merchant-select">
-      <% for merchant in @merchants %>
-        <option value="<%= merchant.id %>"><%= merchant.name %></option>
-      <% end %>
-    </select>
-
-    <label for="tag-select">Tag:</label>
-    <select name="tag_id" id="tag-select">
-      <% for tag in @tags %>
-      <option value="<%= tag.id %>"><%= tag.name %></option>
-      <% end %>
-    </select>
-
-    <label for="description">Description:</label>
-    <input required type="text" id="decription" name="description">
-
-    <label for="amount">Amount:</label>
-    <input required type="number" id="amount" name="amount">
-
-    <input type="submit" value="Add Transaction">
-
-  </form>
-
-</div>
-
 <div>
-  <% if (@transaction_failed == true) %>
-  <p>Sorry! You currently dont have the <a href="/users/add-funds">funds</a> for this transaction.</p>
-  <% end %>
-</div>
+  <div class="content-container">
+    <div class ="container-dropdown">
+
+      <div class ="dropdown">
+        <button class="dropbtn">Merchants</button>
+        <div class="dropdown-content">
+          <ul class="merchants">
+          <% for merchant in @merchants %>
+            <li><%= merchant.name %></li>
+          <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <div class ="dropdown">
+        <button class="dropbtn">Tags</button>
+        <div class="dropdown-content">
+          <ul class="merchants">
+          <% for tag in @tags %>
+            <li><%= tag.name %></li>
+          <% end %>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+
+    <br>
+    <br>
+    <div class="container">
+
+      <form action="/merchants" method="POST">
+        <label for="merchant-name">Merchant Name: </label>
+        <input required type="text" id="merchant-name" name="name">
+        <input class="btn-add" type="submit" value="Add Merchant">
+      </form>
+
+      <br>
+
+      <form action="/tags" method="POST">
+        <label for="tag-name">Tag Name: </label>
+        <input required type="text" id="tag-name" name="name">
+
+        <input class="btn-add" type="submit" value="Add Tag">
+      </form>
+
+    </div>
+
+
+
+    <h1 class="linear-background">Create Transaction</h1>
+
+    <div class="container" >
+      <form action="/transactions" method="POST">
+
+        <label for="merchant-select">Merchant:</label>
+        <select name="merchant_id" id="merchant-select">
+          <% for merchant in @merchants %>
+            <option value="<%= merchant.id %>"><%= merchant.name %></option>
+          <% end %>
+        </select>
+
+        <label for="tag-select">Tag:</label>
+        <select name="tag_id" id="tag-select">
+          <% for tag in @tags %>
+          <option value="<%= tag.id %>"><%= tag.name %></option>
+          <% end %>
+        </select>
+
+        <label for="description">Description:</label>
+        <input required type="text" id="decription" name="description">
+
+        <label for="amount">Amount:</label>
+        <input required type="number" step="0.01" id="amount" name="amount">
+
+        <input class="btn-add" type="submit" value="Add Transaction">
+
+      </form>
+
+    </div>
+
+    <div>
+      <% if (@transaction_failed == true) %>
+      <p>Sorry! You currently dont have the <a href="/users/add-funds">funds</a> for this transaction.</p>
+      <% end %>
+    </div>
+
+
+ </div>

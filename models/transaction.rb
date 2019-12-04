@@ -11,7 +11,7 @@ class Transaction
   def initialize(info)
     @id = info['id'].to_i() if info['id']
     @description = info['description']
-    @amount = info['amount'].to_i()
+    @amount = info['amount'].to_f()
     @date = info['transaction_timestamp']
     @merchant_id = info['merchant_id'].to_i()
     @tag_id = info['tag_id'].to_i()
@@ -48,8 +48,8 @@ class Transaction
 
   def update ()
     sql_query = "UPDATE transactions
-    SET (description, amount, transaction_timestamp, merchant_id, tag_id)
-    = ($1, $2, CURRENT_TIMESTAMP, $3, $4)
+    SET (description, amount, merchant_id, tag_id)
+    = ($1, $2, $3, $4)
     WHERE id = $5"
     values = [@description, @amount, @merchant_id,
               @tag_id, @id]
@@ -176,7 +176,7 @@ class Transaction
     sql_query = "SELECT SUM(amount)
     FROM transactions;"
     result = SqlRunner.run(sql_query)[0]
-    return result['sum']
+    return result['sum'].to_f()
   end
 
 
@@ -186,7 +186,7 @@ class Transaction
     for transaction in transactions
       running_total += transaction.amount
     end
-    return running_total
+    return running_total.round(2)
   end
 
 

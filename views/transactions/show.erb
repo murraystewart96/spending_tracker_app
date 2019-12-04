@@ -1,9 +1,10 @@
 
+<div class="content-container">
+  <h1>Transaction Successfully Edited</h1>
 
-<h1>Transaction Successfully Edited</h1>
-
-<p>Merchant: <%= @transaction.merchant().name %></p>
-<p>Tag: <%= @transaction.tag().name%></p>
-<p>Description: <%= @transaction.description %></p>
-<p>Amount: <%= @transaction.amount %></p>
-<p>Timestamp: <%= @transaction.timestamp() %></p>
+  <p>Merchant: <%= @transaction.merchant().name %></p>
+  <p>Tag: <%= @transaction.tag().name%></p>
+  <p>Description: <%= @transaction.description %></p>
+  <p>Amount: £<%= @transaction.amount %></p>
+  <p>Timestamp: <%= @transaction.timestamp() %></p>
+</div>

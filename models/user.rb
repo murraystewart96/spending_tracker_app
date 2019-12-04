@@ -8,7 +8,7 @@ class User
     @id = info['id'].to_i() if info['id']
     @first_name = info['first_name']
     @last_name = info['last_name']
-    @balance = info['balance'].to_f() if info['balance']
+    @balance = info['balance'].to_f().round(2) if info['balance']
     @balance_warning = info['balance_warning'].to_f()
   end
 
@@ -50,7 +50,8 @@ class User
 
 
   def pay_for_transaction(amount)
-    @balance -= amount
+    @balance -= amount.to_f()
+    @balance.round(2)
     update()
   end
 

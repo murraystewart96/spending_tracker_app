@@ -1,14 +1,23 @@
-<h1>*** Current Balance: £<%= @user.balance %></h1>
 
+<div>
+  <div class="content-container-funds">
+    <div class="container-center-column">
+      <h1>Current Balance: £<%= @user.balance %></h1>
 
-<% if (@user.balance_warning()) %>
-  <h2><%= @user.balance_warning() %></h2>
-<% end %>
+      <% if (@user.balance_warning()) %>
+        <h2><%= @user.balance_warning() %></h2>
+      <% end %>
 
-<form action="/users" method = "POST">
+    </div>
 
-     <label for="add-funds">Amount:£</label>
-     <input type="number" id="add-funds" name="amount">
+    <div class="container-center-column">
+      <form action="/users" method = "POST">
 
-     <input type="submit" value="Add Funds">
-</form>
+         <label for="add-funds">Amount:£</label>
+         <input type="number" id="add-funds" name="amount">
+
+         <input class="btn-add" type="submit" value="Add Funds">
+      </form>
+    </div>
+  </div>
+</div>

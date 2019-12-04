@@ -1,155 +1,185 @@
 
+<div>
+  <div class="content-container">
 
-<h1>*** SPENDING ***</h1>
-
-<h2>Current Balance: £<%= @user.balance %></h2>
-
-<% if (@filtered) %>
-  <h2>Spending <%= @month_filter_name %> <%= @tag_filter_name %>
-    <%= @merchant_filter_name %>: £<%= @transactions_amount %></h2>
-<% else %>
-  <h2>All Time Spending: £<%= @transactions_amount %></h2>
-<% end %>
-
-
-<div class ="container">
-  <form action="/transactions" method="get">
-    <input type="submit" value="Transactions">
-  </form>
-
-  <form action="/transactions/monthly-spending" method="get">
-    <input type="submit" value="Monthly Spending">
-  </form>
-
-</div>
-
-
-
-<% if (@transaction_view) %>
-
-  <div class="container">
-    <form action="/transactions/filtered" method="POST">
-      <label for="month-select">Month:</label>
-      <select name="month_num" id="months">
-        <option selected value="0" >All</option>
-        <% for month in @months%>
-          <% if (@month_num == @months.index(month)+1) %>
-            <option selected value=<%= @month_num %>><%= month %></option>
-          <% else %>
-            <option value=<%= (@months.index(month)+1) %>><%= month %></option>
-          <% end %>
-        <% end  %>
-      </select>
-
-      <label for="tag-select">Tag:</label>
-      <select name= "tag_id" id="tags">
-        <option selected value="0">All</option>
-        <% for tag in @tags%>
-          <% if (@tag_id == tag.id) %>
-            <option selected value=<%= @tag_id %>><%= tag.name %></option>
-          <% else%>
-            <option value="<%= tag.id %>"><%= tag.name %></option>
-          <% end %>
-        <% end %>
-      </select>
-
-
-      <label for="merchant-select">Merchant:</label>
-      <select name= "merchant_id" id="merchants">
-        <option selected value="0">All</option>
-        <% for merchant in @merchants%>
-          <% if (@merchant_id == merchant.id) %>
-            <option selected value=<%= @merchant_id %>><%= merchant.name %></option>
-          <% else%>
-            <option value="<%= merchant.id %>"><%= merchant.name %></option>
-          <% end %>
-        <% end %>
-      </select>
-
-      <input type="submit" value="filter">
-
-    </form>
-  </div>
-
-
-  <div class="container">
-    <form action="/transactions/filtered/sorted/<%= @month_num %>/<%= @tag_id %>/<%= @merchant_id %>" method="POST">
-      <label for="newest">New</label>
-      <input type="radio" name="sort_by" value="newest" checked>
-      <label for="oldest">Old</label>
-      <% if @sort_by == "oldest" %>
-        <input type="radio" name="sort_by" value="oldest" checked>
+    <div class="transaction-header">
+      <h2 class = "money-display">Current Balance: £<%= @user.balance %></h2>
+      <% if (@filtered) %>
+        <h2 class="money-display">Spending <%= @month_filter_name %> <%= @tag_filter_name %>
+          <%= @merchant_filter_name %>: £<%= @transactions_amount %></h2>
       <% else %>
-        <input type="radio" name="sort_by" value="oldest">
+        <h2 class="money-display">All Time Spending: £<%= @transactions_amount %></h2>
       <% end %>
-      <input type="submit" value="sort by">
-    </form>
+    </div>
+
+
+    <div class ="container-spending-view">
+      <form action="/transactions" method="get">
+        <input class= "btn" type="submit" value="Transactions">
+      </form>
+
+      <form action="/transactions/monthly-spending" method="get">
+        <input class= "btn" type="submit" value="Monthly Spending">
+      </form>
+
+    </div>
+
+
+
+    <% if (@transaction_view) %>
+
+    <h2>Transactions</h2>
+
+      <div class="container">
+        <form action="/transactions/filtered" method="POST">
+          <label for="month-select">Month:</label>
+          <select name="month_num" id="months">
+            <option selected value="0" >All</option>
+            <% for month in @months%>
+              <% if (@month_num == @months.index(month)+1) %>
+                <option selected value=<%= @month_num %>><%= month %></option>
+              <% else %>
+                <option value=<%= (@months.index(month)+1) %>><%= month %></option>
+              <% end %>
+            <% end  %>
+          </select>
+
+          <label for="tag-select">Tag:</label>
+          <select name= "tag_id" id="tags">
+            <option selected value="0">All</option>
+            <% for tag in @tags%>
+              <% if (@tag_id == tag.id) %>
+                <option selected value=<%= @tag_id %>><%= tag.name %></option>
+              <% else%>
+                <option value="<%= tag.id %>"><%= tag.name %></option>
+              <% end %>
+            <% end %>
+          </select>
+
+
+          <label for="merchant-select">Merchant:</label>
+          <select name= "merchant_id" id="merchants">
+            <option selected value="0">All</option>
+            <% for merchant in @merchants%>
+              <% if (@merchant_id == merchant.id) %>
+                <option selected value=<%= @merchant_id %>><%= merchant.name %></option>
+              <% else%>
+                <option value="<%= merchant.id %>"><%= merchant.name %></option>
+              <% end %>
+            <% end %>
+          </select>
+
+          <input class= "btn-filter" type="submit" value="filter">
+
+        </form>
+      </div>
+
+
+      <div class="container">
+        <form action="/transactions/filtered/sorted/<%= @month_num %>/<%= @tag_id %>/<%= @merchant_id %>" method="POST">
+          <label for="newest">New</label>
+          <input type="radio" name="sort_by" value="newest" checked>
+          <label for="oldest">Old</label>
+          <% if @sort_by == "oldest" %>
+            <input type="radio" name="sort_by" value="oldest" checked>
+          <% else %>
+            <input type="radio" name="sort_by" value="oldest">
+          <% end %>
+          <input class="btn" type="submit" value="sort by">
+        </form>
+      </div>
+
+
+
+
+      <% for index in 0..Transaction.get_visible_transactions() %>
+      <% if (@transactions[index]) %>
+      <div class="container-transaction">
+          <div class="item"><p><strong>Merchant:</strong> <%= @transactions[index].merchant().name %></p></div>
+          <div class="item"><p><strong>Tag:</strong> <%= @transactions[index].tag().name%></p></div>
+          <div class="item"><p><strong>Description:</strong> <%= @transactions[index].description %></p></div>
+          <div class="item"><p><strong>Amount:</strong> £<%= @transactions[index].amount %></p></div>
+          <div class="item"><p><strong>Date:</strong> <%= @transactions[index].timestamp() %></p></div>
+      </div>
+        <a class="transaction-edit" href="/transactions/<%= @transactions[index].id %>/edit">Edit</a>
+      <hr />
+        <% end %>
+      <% end  %>
+
+
+      <% if (!@filtered)%>
+        <form action="/transactions/load-more" method="get">
+          <input class="btn" type="submit" value="Load More">
+        </form>
+      <% end %>
+
+    <% end %>
+
+
+
+    <% if (@monthly_spending_view) %>
+    <div>
+      <div class="container">
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Total Spent</th>
+              <th class ="blank"></th>
+              <% for tag in @tags %>
+              <th><%= tag.name.capitalize() %></th>
+              <% end %>
+              <th class ="blank"></th>
+              <% for merchant in @merchants %>
+              <th><%= merchant.name.capitalize() %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+          <% for month in 0..11 %>
+            <tr>
+              <td class="month"><a href="/transactions/filtered/<%= month + 1 %>"><%= @months[month] %></a></td>
+              <td class ="month"><%= @months_spending[month]%></td>
+              <td class = "blank"></td>
+              <% for index in 0...@tags.size() %>
+              <td class="tag"><%= @each_tags_monthly_cost[index][month] %></td>
+              <% end %>
+              <td class = "blank"></td>
+              <% for index in 0...@merchants.size() %>
+              <td class="merchant"><%= @each_merchants_monthly_cost[index][month] %></td>
+              <% end %>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <div class="table-key">
+          <p class="tag-key">Tag</p>
+          <br>
+          <p class="merchant-key">Merchant</p>
+        </div>
+      </div>
+
+        <h2>Average Monthly Spending:£<%= @average_monthly_spending %></h2>
+        <div class="average-spendings">
+          <div class="average-tags">
+            <h3>Average Monthly Spending Per Tag:</h3>
+            <ul>
+              <%for tag in @tags %>
+              <li><%= tag.name.capitalize() %>: £<%= tag.average_monthly_spending() %></li>
+              <% end %>
+            </ul>
+            </div>
+          <div class="average-merchants">
+          <h3>Average Monthly Spending Per Merchant:</h3>
+          <ul>
+            <%for merchant in @merchants %>
+            <li><%= merchant.name.capitalize() %>: £<%= merchant.average_monthly_spending() %></li>
+            <% end %>
+          </ul>
+          </div>
+
+        </div>
+      </div>
+    <% end %>
   </div>
-
-
-
-
-  <% for index in 0..Transaction.get_visible_transactions() %>
-  <% if (@transactions[index]) %>
-    <p>Merchant: <%= @transactions[index].merchant().name %></p>
-    <p>Tag: <%= @transactions[index].tag().name%></p>
-    <p>Description: <%= @transactions[index].description %></p>
-    <p>Amount: <%= @transactions[index].amount %></p>
-    <p>Timestamp: <%= @transactions[index].timestamp() %></p>
-    <a href="/transactions/<%= @transactions[index].id %>/edit">Edit</a>
-    <% end %>
-  <% end  %>
-
-
-
-
-  <form action="/transactions/load-more" method="get">
-    <input type="submit" value="Load More">
-  </form>
-
-<% end %>
-
-
-
-<% if (@monthly_spending_view) %>
-  <table>
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Total Spent</th>
-        <% for tag in @tags %>
-        <th><%= tag.name.capitalize() %></th>
-        <% end %>
-        <% for merchant in @merchants %>
-        <th><%= merchant.name.capitalize() %></th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-    <% for month in 0..11 %>
-      <tr>
-        <td><a href="/transactions/filtered/<%= month + 1 %>"><%= @months[month] %></a></td>
-        <td><%= @months_spending[month]%></td>
-        <% for index in 0...@tags.size() %>
-        <td><%= @each_tags_monthly_cost[index][month] %></td>
-        <% end %>
-        <% for index in 0...@merchants.size() %>
-        <td><%= @each_merchants_monthly_cost[index][month] %></td>
-        <% end %>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-
-  <h2>Average Monthly Spending:£<%= @average_monthly_spending %></h2>
-
-  <h3>Average Monthly Spending Per Tag:</h3>
-  <%for tag in @tags %>
-  <h4><%= tag.name.capitalize() %>: £<%= tag.average_monthly_spending() %></h4>
-  <% end %>
-
-  <h3>Average Monthly Spending Per Merchant:</h3>
-  <%for merchant in @merchants %>
-  <h4><%= merchant.name.capitalize() %>: £<%= merchant.average_monthly_spending() %></h4>
-  <% end %>
-<% end %>
+</div>
