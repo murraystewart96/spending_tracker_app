@@ -1,12 +1,19 @@
+<div class="content-container">
+<div class ="container-dropdown">
+<div class ="dropdown">
+  <button class="dropbtn">Merchants</button>
+  <div class="dropdown-content">
+    <ul class="merchants">
+    <% for merchant in @merchants %>
+      <li><%= merchant.name %></li>
+    <% end %>
+    </ul>
+  </div>
+</div>
+</div>
+
 <h1>*** CREATE MERCHANT ***</h1>
 
-
-
-<ul class="merchants">
-<% for merchant in @merchants %>
-  <li><%= merchant.name %></li>
-<% end %>
-</ul>
 
 <form action="/merchants" method="POST">
   <label for="merchant-name">Merchant Name: </label>
@@ -14,3 +21,4 @@
 
   <input type="submit" value="Create Merchant">
 </form>
+</div>

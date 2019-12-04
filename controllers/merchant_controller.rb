@@ -14,5 +14,6 @@ end
 post('/merchants') do
   merchant = Merchant.new(params)
   merchant.save()
-  redirect(:'transactions/new')
+  @merchants = Merchant.all()
+  erb(:'merchants/new')
 end
